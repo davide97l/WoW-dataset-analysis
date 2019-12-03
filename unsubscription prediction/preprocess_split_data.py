@@ -63,6 +63,9 @@ def main():
     # weekly hours played
     wow['time_hours'] = (wowah.groupby(['ID', 'timestamp'])['ID'].count() / 6).round(3).apply(utils.smooth_hours)
 
+    # weekly visited unique maps
+    #wow['n_maps'] = wowah.groupby(['ID', 'timestamp'])['zone'].unique().count()
+
     ids = wow['ID'].tolist()
     max_id = max(ids)
     c = 4
@@ -87,7 +90,7 @@ def main():
             # add rows relative to weeks not present in the dataset (inactivity weeks)
             if index not in weeks:
                 temp_wow.loc[index] = {'evolution': 0, 'lvl_avg': last_lvl_avg,
-                                       'time_hours': 0, 'status': 0}
+                                       'time_hours': 0, 'n_maps': 0, 'status': 0}
             else:
                 last_lvl_avg = temp_wow.at[index, 'lvl_avg']
             index += 1

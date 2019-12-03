@@ -44,10 +44,10 @@ def main():
     print("ABT sequences: {}".format(len(abt)))
     print("ING sequences: {}".format(len(ing)))
     abt_labels = np.array([1 for i in range(len(abt))])
-    ing_labels = np.array([0 for i in range(len(ing))])
+    ing_labels = np.array([0 for i in range(len(ing))])[:len(abt)]
 
     abt = np.array(abt)
-    ing = np.array(ing)[:, :len(abt)]
+    ing = np.array(ing)[:len(abt)]
 
     X, y = shuffle(np.concatenate((abt, ing)), np.concatenate((abt_labels, ing_labels)))
 
@@ -68,15 +68,15 @@ def main():
     utils.print_metrics(y_pred, y_test)
 
     """
-    accuracy on test set: 0.766
+    accuracy on test set: 0.765
     --- ING labels ---
-    precision: 0.950
-    recall: 0.769
-    fscore: 0.850
+    precision: 0.819
+    recall: 0.738
+    fscore: 0.777
     --- ATC labels ---
-    precision: 0.341
-    recall: 0.746
-    fscore: 0.468
+    precision: 0.710
+    recall: 0.797
+    fscore: 0.751
     """
 
 

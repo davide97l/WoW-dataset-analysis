@@ -16,7 +16,7 @@ input_dir = '../warcraft-avatar-history/'
 output_dir = '../warcraft-avatar-history/'
 player_dir = 'players/'
 history = 7
-only_last_abt_week = False  # if True consider only the last ABT week and set the others as ING
+only_last_abt_week = True  # if True consider only the last ABT week and set the others as ING
 
 
 def main():
@@ -51,10 +51,10 @@ def main():
     print("ABT sequences: {}".format(len(abt)))
     print("ING sequences: {}".format(len(ing)))
     abt_labels = np.array([1 for i in range(len(abt))])
-    ing_labels = np.array([0 for i in range(len(ing))])
+    ing_labels = np.array([0 for i in range(len(ing))])[:len(abt)]
 
     abt = np.array(abt)
-    ing = np.array(ing)[:, :len(abt)]
+    ing = np.array(ing)[:len(abt)]
 
     X, y = shuffle(np.concatenate((abt, ing)), np.concatenate((abt_labels, ing_labels)))
 
@@ -76,26 +76,26 @@ def main():
 
     """
     history = 7
-    accuracy on test set: 0.797
+    accuracy on test set: 0.773
     --- ING labels ---
-    precision: 0.944
-    recall: 0.805
-    fscore: 0.869
+    precision: 0.842
+    recall: 0.740
+    fscore: 0.788
     --- ATC labels ---
-    precision: 0.433
-    recall: 0.756
-    fscore: 0.550
+    precision: 0.704
+    recall: 0.817
+    fscore: 0.757
     
     (considering churn weeks only the ast week of the churning period)
-        accuracy on test set: 0.895
+    accuracy on test set: 0.838
     --- ING labels ---
-    precision: 0.976
-    recall: 0.908
-    fscore: 0.941
+    precision: 0.886
+    recall: 0.804
+    fscore: 0.843
     --- ATC labels ---
-    precision: 0.381
-    recall: 0.719
-    fscore: 0.498
+    precision: 0.793
+    recall: 0.878
+    fscore: 0.833
     """
 
 

@@ -18,15 +18,20 @@ input_dir = '../warcraft-avatar-history/'
 output_dir = '../warcraft-avatar-history/'
 player_dir = 'players/'
 history = 10
-only_last_abt_week = True  # if True consider only the last ABT week and set the others as ING
+only_last_abt_week = False  # if True consider only the last ABT week and set the others as ING
 
 
 def main():
+    wowah = pd.read_csv(input_dir + 'wowa_data_labeled.csv')
+    id_list = np.array(wowah[wowah['behaviour'] == 'killer']['ID'])
     csv_files = glob.glob(player_dir + "/*.csv")
     abt = []
     ing = []
     n_files = len(csv_files)
     for i, filename in enumerate(csv_files):
+        name = int(filename.split('.')[0].split('\\')[1].split('_')[1])
+        #if name not in id_list:
+        #    continue
         print("elaborating file {} of {}".format(i + 1, n_files))
         ph = pd.read_csv(filename)  # get player history
         ph["timestamp"] = pd.to_numeric(ph["timestamp"], downcast='integer')
@@ -53,10 +58,10 @@ def main():
     print("ABT sequences: {}".format(len(abt)))
     print("ING sequences: {}".format(len(ing)))
     abt_labels = np.array([1 for i in range(len(abt))])
-    ing_labels = np.array([0 for i in range(len(ing))])
+    ing_labels = np.array([0 for i in range(len(ing))])[:len(abt)]
 
     abt = np.array(abt)
-    ing = np.array(ing)[:, :len(abt)]
+    ing = np.array(ing)[:len(abt), :]
 
     X, y = shuffle(np.concatenate((abt, ing)), np.concatenate((abt_labels, ing_labels)))
 
@@ -83,13 +88,8 @@ def main():
     # Final evaluation of the model
     scores = model.evaluate(X_test, y_test, verbose=0)
     print("Accuracy: %.2f%%" % (scores[1] * 100))
-    # Final evaluation of the model
-    scores = model.evaluate(X_test, y_test, verbose=0)
-    print("Accuracy: %.2f%%" % (scores[1] * 100))
     y_pred = model.predict(X_test, verbose=0)
-    print(y_pred)
     y_pred = y_pred > 0.5
-    print(y_pred)
 
     acc = accuracy_score(y_pred, y_test)
     print("accuracy on test set: {:.3f}".format(acc))
@@ -97,26 +97,26 @@ def main():
 
     """
     history = 10
-    accuracy on test set: 0.802
+    accuracy on test set: 0.783
     --- ING labels ---
-    precision: 0.928
-    recall: 0.819
-    fscore: 0.870
+    precision: 0.855
+    recall: 0.749
+    fscore: 0.798
     --- ATC labels ---
-    precision: 0.483
-    recall: 0.727
-    fscore: 0.581
+    precision: 0.710
+    recall: 0.829
+    fscore: 0.765
     
     (considering churn weeks only the ast week of the churning period)
-    accuracy on test set: 0.903
+    accuracy on test set: 0.850
     --- ING labels ---
-    precision: 0.964
-    recall: 0.927
-    fscore: 0.945
+    precision: 0.880
+    recall: 0.828
+    fscore: 0.853
     --- ATC labels ---
-    precision: 0.505
-    recall: 0.685
-    fscore: 0.582
+    precision: 0.821
+    recall: 0.875
+    fscore: 0.847
     """
 
 
