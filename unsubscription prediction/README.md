@@ -1,4 +1,4 @@
-Player departure prection
+# Player departure prection
 
 Project overview:
 - filter_data.py: extract some samples from the original dataset (only used to speed up compoutation during testing)
